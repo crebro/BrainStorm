@@ -14,4 +14,3 @@ class BrainstormApplication:
 
     def run(self):
         self.mainMenu.draw()
-

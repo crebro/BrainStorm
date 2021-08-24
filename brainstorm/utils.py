@@ -9,12 +9,12 @@ def renderTextCenteredAt(text, font, colour, x, y, screen, allowed_width):
         line_words = []
         while len(words) > 0:
             line_words.append(words.pop(0))
-            fw, fh = font.size(' '.join(line_words + words[:1]))
+            fw, fh = font.size(" ".join(line_words + words[:1]))
             if fw > allowed_width:
                 break
 
         # add a line consisting of those words
-        line = ' '.join(line_words)
+        line = " ".join(line_words)
         lines.append(line)
 
     # now we've split our text into lines that fit into the width, actually
@@ -34,4 +34,3 @@ def renderTextCenteredAt(text, font, colour, x, y, screen, allowed_width):
         screen.blit(font_surface, (tx, ty))
 
         y_offset += fh
-
