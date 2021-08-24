@@ -19,4 +19,5 @@ IMAGES = {
     "console": pygame.transform.scale(pygame.image.load("assets/images/console.png"), (200, 200)),
     "news": pygame.transform.scale(pygame.image.load("assets/images/news.png"), (200, 200)),
     "na": pygame.transform.scale(pygame.image.load("assets/images/not available.png"), (260, 150)),
+    "back": pygame.transform.scale(pygame.image.load("assets/images/backbutton.png"), (50, 50)),
 }

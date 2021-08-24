@@ -1,8 +1,8 @@
 from brainstorm.constants import COLORS, FONTS
 import pygame
 
-class MainMenuButton:
-    def __init__(self, image, text, centerX, y, padding=30) -> None:
+class MenuButton:
+    def __init__(self, image, text, centerX, y, padding=30, x=None) -> None:
         self.image = image
         self.text = FONTS["Regular"].render(
             text, 1, (COLORS['white_foreground']))

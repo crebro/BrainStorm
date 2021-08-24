@@ -1,5 +1,5 @@
 from brainstorm.newsScreen import NewsScreen
-from brainstorm.mainMenubutton import MainMenuButton
+from brainstorm.menuButton import MenuButton
 from brainstorm.constants import COLORS, FONTS, IMAGES
 import pygame
 
@@ -13,9 +13,9 @@ class MainMenu:
             "BrainStorm", 1, (COLORS['white_foreground']))
         self.mainMenuByline = FONTS['Regular'].render(
             "The all in one solution to Health Problems and Goals", 1, (COLORS['white_foreground']))
-        self.gamesOption = MainMenuButton(
+        self.gamesOption = MenuButton(
             IMAGES["console"], "Brain Games", self.width / 2 - (IMAGES["console"].get_width()),  self.height / 2 - (IMAGES["console"].get_height() / 2))
-        self.newsOption = MainMenuButton(IMAGES['news'], "Health News", self.width / 2 + (IMAGES["console"].get_width()),  self.height / 2 - (IMAGES["console"].get_height() / 2))
+        self.newsOption = MenuButton(IMAGES['news'], "Health News", self.width / 2 + (IMAGES["console"].get_width()),  self.height / 2 - (IMAGES["console"].get_height() / 2))
         self.clock = pygame.time.Clock()
         self.running = True
 
