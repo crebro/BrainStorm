@@ -8,22 +8,10 @@ class BrainstormApplication:
         self.width = width
         self.height = height
         self.win = pygame.display.set_mode((self.width, self.height))
-        self.running = True
-        self.clock = pygame.time.Clock()
         self.mainMenu = MainMenu(self.win)
         self.showingMainMenu = True
         pygame.display.set_caption("Brain Storm")
 
     def run(self):
-        while self.running:
-            self.clock.tick(40)
-            self.win.fill(COLORS['black_background'])
+        self.mainMenu.draw()
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.running = False
-
-            if (self.showingMainMenu):
-                self.mainMenu.draw()
-
-            pygame.display.update()

@@ -17,4 +17,5 @@ FONTS = {
 IMAGES = {
     "console": pygame.transform.scale(pygame.image.load("assets/images/console.png"), (200, 200)),
     "news": pygame.transform.scale(pygame.image.load("assets/images/news.png"), (200, 200)),
+    "na": pygame.transform.scale(pygame.image.load("assets/images/not available.png"), (200, 150)),
 }

@@ -1,3 +1,4 @@
+from brainstorm.newsScreen import NewsScreen
 from brainstorm.mainMenubutton import MainMenuButton
 from brainstorm.constants import COLORS, FONTS, IMAGES
 import pygame
@@ -15,8 +16,31 @@ class MainMenu:
         self.gamesOption = MainMenuButton(
             IMAGES["console"], "Brain Games", self.width / 2 - (IMAGES["console"].get_width()),  self.height / 2 - (IMAGES["console"].get_height() / 2))
         self.newsOption = MainMenuButton(IMAGES['news'], "Health News", self.width / 2 + (IMAGES["console"].get_width()),  self.height / 2 - (IMAGES["console"].get_height() / 2))
+        self.clock = pygame.time.Clock()
+        self.running = True
 
     def draw(self,):
+        while self.running:
+            self.clock.tick(40)
+            self.surface.fill(COLORS['black_background'])
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    b1, b2, b3 = pygame.mouse.get_pressed()
+                    if b1 and self.newsOption.isHovering():
+                        # self.running = False
+                        newsScreen = NewsScreen(self.surface)
+                        newsScreen.draw()
+                        
+
+            self.update()
+            pygame.display.update()
+
+
+    def update(self):
 
         # Blitting the Headline and the Byline of the Application on to the Screen
         self.surface.blit(self.mainMenuHeadline, (self.width / 2 -
@@ -27,5 +51,3 @@ class MainMenu:
         # Blitting the image and Text of the Console Image
         self.gamesOption.draw(self.surface)
         self.newsOption.draw(self.surface)
-        # imageX, imageY = , windowHeight / 2 - \
-        #     (self.image.get_height() / 2)
