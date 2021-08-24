@@ -10,6 +10,7 @@ COLORS = {
 
 FONTS = {
     "Regular": pygame.font.Font("assets/fonts/NunitoSans-Regular.ttf", 20),
+    "RegularSmall": pygame.font.Font("assets/fonts/NunitoSans-Regular.ttf", 15),
     "SemiBold": pygame.font.Font("assets/fonts/NunitoSans-SemiBold.ttf", 40),
     "Bold": pygame.font.Font("assets/fonts/NunitoSans-Bold.ttf", 50),
 }
@@ -17,5 +18,5 @@ FONTS = {
 IMAGES = {
     "console": pygame.transform.scale(pygame.image.load("assets/images/console.png"), (200, 200)),
     "news": pygame.transform.scale(pygame.image.load("assets/images/news.png"), (200, 200)),
-    "na": pygame.transform.scale(pygame.image.load("assets/images/not available.png"), (200, 150)),
+    "na": pygame.transform.scale(pygame.image.load("assets/images/not available.png"), (260, 150)),
 }

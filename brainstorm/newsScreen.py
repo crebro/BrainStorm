@@ -18,15 +18,19 @@ class NewsScreen:
         self.drawing = True
         self.topText = FONTS["Bold"].render("Latest Health News", 1, COLORS['white_foreground'])
         self.topPadding = 20
-        self.singleNewsHeight = 150
+        self.singleNewsHeight = 150 + (40 * 2)
         self.numberOfNews = 5
         self.allowedWidthForNews = 900
         self.newsSurfaceHeight = self.singleNewsHeight * self.numberOfNews
         self.newsSurface = pygame.Surface( ( self.width,  self.newsSurfaceHeight) )
-        self.imageWidth = 200
+        self.newsWidth = 300
+        self.newsImageHeight = 150
+        self.newsPadding = 20
+        self.newsImageWidth = self.newsWidth - (self.newsPadding * 2)
         self.newsSurface.fill(COLORS['black_background'])
         self.initialSurfaceYPos = self.topPadding + self.topText.get_height() + self.topPadding
         self.surfaceYPos = self.topPadding + self.topText.get_height() + self.topPadding
+        self.scrollSpeed = 50
 
         getNewsThread = threading.Thread(target=self.getNewsWithRequest)
         getNewsThread.start()
@@ -51,6 +55,7 @@ class NewsScreen:
 
     def on_news_get(self):
         currentHeight = 0
+        currentRowIteration = 0
         for news_item in self.news:
             # renderedText = FONTS['Regular'].render(news_item['title'], 1, COLORS['white_foreground'] )
             onlineImageLocation = news_item['urlToImage']
@@ -59,20 +64,19 @@ class NewsScreen:
             image = IMAGES['na']
             try:
                 urllib.request.urlretrieve(onlineImageLocation, randomStorageLocation)
-
-                image = pygame.transform.scale( pygame.image.load(randomStorageLocation) , ( self.imageWidth, self.singleNewsHeight ) )
-
+                image = pygame.transform.scale( pygame.image.load(randomStorageLocation) , ( self.newsImageWidth, self.newsImageHeight ) )
                 os.remove(randomStorageLocation)
             except Exception as e:
                 print(e)
 
-            self.newsSurface.blit( image, ( self.width / 2 - (self.allowedWidthForNews / 2), currentHeight  ) )
-            remainingWidth = self.allowedWidthForNews - image.get_width() + 20
-            renderTextCenteredAt(news_item['title'], FONTS['Regular'], COLORS['white_foreground'], ( ((self.width / 2 - (self.allowedWidthForNews / 2)) +  image.get_width())) + (remainingWidth / 2)   , currentHeight , self.newsSurface, remainingWidth )
+            imageX, imageY =  self.width / 2 - (self.allowedWidthForNews / 2) + currentRowIteration * self.newsWidth + (self.newsPadding if currentRowIteration == 1 else self.newsPadding - 2 ), currentHeight  
+            self.newsSurface.blit( image, (imageX, imageY) )
+            renderTextCenteredAt(news_item['title'], FONTS['RegularSmall'], COLORS['white_foreground'], imageX + image.get_width() / 2 , currentHeight + image.get_height() + 10 , self.newsSurface, self.newsImageWidth )
             
-            # self.newsSurface.blit( renderedText , ( self.width / 2 - (renderedText.get_width() / 2), currentHeight) )
-            currentHeight += self.singleNewsHeight
-            
+            currentRowIteration += 1
+            if currentRowIteration == 3:
+                currentHeight += self.singleNewsHeight
+                currentRowIteration = 0
 
     def getNewsWithRequest(self):
         response = getJsonRequest(self.newsApiRequestLocation)
@@ -85,9 +89,9 @@ class NewsScreen:
 
     def on_scroll(self, up):
         if up  and self.surfaceYPos < self.initialSurfaceYPos:
-            self.surfaceYPos += 10
+            self.surfaceYPos += self.scrollSpeed
         elif not(up)  and self.surfaceYPos  + self.initialSurfaceYPos > ( self.newsSurfaceHeight - self.height ):
-            self.surfaceYPos -= 10
+            self.surfaceYPos -= self.scrollSpeed
 
     # def listenToScrolling(self):
     #     listener = mouse.Listener(

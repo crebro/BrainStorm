@@ -23,7 +23,7 @@ def renderTextCenteredAt(text, font, colour, x, y, screen, allowed_width):
     # we'll render each line below the last, so we need to keep track of
     # the culmative height of the lines we've rendered so far
     y_offset = 0
-    for line in lines:
+    for line in lines[:2]:
         fw, fh = font.size(line)
 
         # (tx, ty) is the top-left of the font surface
