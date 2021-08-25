@@ -1,3 +1,4 @@
+from brainstorm.memoryMatrix import MemoryMatrix
 from brainstorm.menuButton import MenuButton
 from pygame.event import Event
 from brainstorm.constants import COLORS, FONTS, IMAGES, WIDTH
@@ -43,6 +44,9 @@ class ChooseGameScreen:
                     b1, b2, b3 = pygame.mouse.get_pressed()
                     if b1 and self.backButton.isHovering():
                         self.drawing = False
+                    if b1 and self.memoryMatrixOption.isHovering():
+                        memoryMatrix = MemoryMatrix(self.surface)
+                        memoryMatrix.draw()
 
             self.update()
             pygame.display.update()

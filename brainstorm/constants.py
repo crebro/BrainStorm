@@ -7,6 +7,10 @@ COLORS = {
     "black_background": (30, 30, 30),
     "hovering_color": (50, 50, 50),
     "white_foreground": (255, 255, 255),
+    "matrix_border": (54, 38, 35),
+    "matrix_background": (113, 82, 72),
+    "matrix_none_box": (93, 68, 61),
+    "matrix_coloured_box": (77, 188, 182),
 }
 
 FONTS = {
