@@ -29,4 +29,10 @@ IMAGES = {
     "back": pygame.transform.scale(
         pygame.image.load("assets/images/backbutton.png"), (50, 50)
     ),
+    "memorymatrix": pygame.transform.scale(
+        pygame.image.load("assets/images/memorymatrix.JPG"), (200, 200)
+    ),
+    "ebbandflow": pygame.transform.scale(
+        pygame.image.load("assets/images/ebbandflow.JPG"), (200, 200)
+    ),
 }

@@ -50,7 +50,7 @@ class MenuButton:
             mousex > self.leftX
             and mousex < self.leftX + self.width
             and mousey > self.y - self.padding
-            and mousey < self.y + self.height
+            and mousey < self.y - self.padding + self.height
         ):
             return True
         return False

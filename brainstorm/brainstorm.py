@@ -1,5 +1,4 @@
 from brainstorm.mainmenu import MainMenu
-from brainstorm.constants import COLORS, FONTS
 import pygame
 
 

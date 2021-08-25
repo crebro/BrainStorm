@@ -39,7 +39,7 @@ class NewsScreen:
         self.scrollSpeed = 50
         self.newsItems = []
         self.backButton = MenuButton(
-            IMAGES["back"], "Back", IMAGES["back"].get_width() / 2 + 10, 10, padding=10
+            IMAGES["back"], "Back", IMAGES["back"].get_width() / 2 + 20, 20, padding=20
         )
 
         getNewsThread = threading.Thread(target=self.getNewsWithRequest)

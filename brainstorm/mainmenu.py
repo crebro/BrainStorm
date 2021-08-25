@@ -1,3 +1,4 @@
+from brainstorm.chooseGameScreen import ChooseGameScreen
 from brainstorm.newsScreen import NewsScreen
 from brainstorm.menuButton import MenuButton
 from brainstorm.constants import COLORS, FONTS, IMAGES
@@ -46,9 +47,11 @@ class MainMenu:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     b1, b2, b3 = pygame.mouse.get_pressed()
                     if b1 and self.newsOption.isHovering():
-                        # self.running = False
                         newsScreen = NewsScreen(self.surface)
                         newsScreen.draw()
+                    if b1 and self.gamesOption.isHovering():
+                        chooseGameScreen = ChooseGameScreen(self.surface)
+                        chooseGameScreen.draw()
 
             self.update()
             pygame.display.update()
