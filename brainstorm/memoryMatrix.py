@@ -30,12 +30,15 @@ class MemoryMatrix:
         self.borderWidth = 20
         self.matrixItemBorderWidth = 10
         self.start_time = pygame.time.get_ticks()
+        self.totalTime = 60
+        self.counter_start_time = pygame.time.get_ticks()
         self.revealing = True
         self.revealingTime = 3000
         self.waitingTime = 2000
         self.waiting = False
         self.score = 0
         self.allRightThisMatch = True
+        self.wrongs = 0
         self.showingAfterGuesses = False
         self.matrixSurface = pygame.Surface(
             (
@@ -49,6 +52,7 @@ class MemoryMatrix:
             self.topPadding + self.topText.get_height() + self.topPadding,
         )
         self.guessesLeft = self.numberOfBlueSquares
+        self.gameOver = False
         self.generateMatrix()
 
     def draw(self):
@@ -74,7 +78,9 @@ class MemoryMatrix:
                                 self.score += 250
                                 pygame.mixer.Sound.play(SOUNDS["flip"])
                             else:
-                                self.allRightThisMatch = False
+                                if self.allRightThisMatch:
+                                    self.allRightThisMatch = False
+                                    self.wrongs += 1
                                 pygame.mixer.Sound.play(SOUNDS["wrong"])
 
                             if self.guessesLeft <= 0:
@@ -86,7 +92,8 @@ class MemoryMatrix:
 
             if (
                 self.revealing
-                and pygame.time.get_ticks() - self.start_time > self.revealingTime
+                and pygame.time.get_ticks() - self.counter_start_time
+                > self.revealingTime
             ):
                 self.revealing = False
 
@@ -94,13 +101,17 @@ class MemoryMatrix:
                 self.waiting
                 and pygame.time.get_ticks() - self.waiting_start_time > self.waitingTime
             ):
+                if self.wrongs >= 3:
+                    self.gameOver = True
+                    print("Game over")
+
                 self.waiting = False
                 self.revealing = True
                 self.showingAfterGuesses = False
                 self.allRightThisMatch = True
                 self.numberOfBlueSquares += 1
                 self.guessesLeft = self.numberOfBlueSquares
-                self.start_time = pygame.time.get_ticks()
+                self.counter_start_time = pygame.time.get_ticks()
                 self.generateMatrix()
 
             self.update()
@@ -130,6 +141,15 @@ class MemoryMatrix:
         self.showGuessesLeft()
         self.showScore()
         self.showAllRightThisMatch()
+        time = (
+            (self.totalTime * 1000)
+            - (pygame.time.get_ticks() - self.counter_start_time)
+        ) // 1000
+        if time <= 0:
+            self.gameOver = True
+        print(time)
+        self.showAllTimeCounter(time)
+        self.showWrongs()
 
     def generateMatrix(self):
         newMatrix = []
@@ -182,7 +202,7 @@ class MemoryMatrix:
                 (WIDTH // 2 // 2 // 2, HEIGHT // 2),
                 50,
             )
-            time = (4000 - (pygame.time.get_ticks() - self.start_time)) // 1000
+            time = (4000 - (pygame.time.get_ticks() - self.counter_start_time)) // 1000
             renderingText = FONTS["Bold"].render(
                 str(
                     time,
@@ -250,3 +270,29 @@ class MemoryMatrix:
                 self.height - scoreText.get_height() - self.topPadding,
             ),
         )
+
+    def showAllTimeCounter(self, time):
+        timeMinutes = int(time // 60)
+        timeSeconds = int(time % 60)
+        timeText = FONTS["Bold"].render(
+            f"Time: {timeMinutes } : {  timeSeconds }",
+            1,
+            COLORS["white_foreground"],
+        )
+        self.surface.blit(
+            timeText,
+            (
+                self.width / 2 - (timeText.get_width() / 2),
+                self.height - timeText.get_height() - self.topPadding,
+            ),
+        )
+
+    def showWrongs(self):
+        for x in range(self.wrongs):
+            self.surface.blit(
+                IMAGES["matrix_wrong"],
+                (
+                    WIDTH - IMAGES["matrix_wrong"].get_width() - self.topPadding,
+                    x * IMAGES["matrix_wrong"].get_height() + self.topPadding,
+                ),
+            )
