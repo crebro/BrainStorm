@@ -1,6 +1,7 @@
+from brainstorm.memoryMatrixItem import MemoryMatrixItem
 from pygame.event import post
 from brainstorm.menuButton import MenuButton
-from brainstorm.constants import COLORS, FONTS, IMAGES, WIDTH
+from brainstorm.constants import COLORS, FONTS, HEIGHT, IMAGES, WIDTH
 import pygame
 import sys
 import random
@@ -25,6 +26,13 @@ class MemoryMatrix:
         self.numberOfBlueSquares = 5
         self.borderWidth = 20
         self.matrixItemBorderWidth = 10
+        self.start_time = pygame.time.get_ticks()
+        self.revealing = True
+        self.revealingTime = 3000
+        self.waitingTime = 2000
+        self.waiting = False
+        self.score = 0
+        self.showingAfterGuesses = False
         self.matrixSurface = pygame.Surface(
             (
                 self.numberOfRows * MATRIX_SQUARE_WIDTH,
@@ -32,8 +40,12 @@ class MemoryMatrix:
             )
         )
         self.matrix = []
+        self.matrixX, self.matrixY = (
+            self.width / 2 - (self.matrixSurface.get_width() / 2),
+            self.topPadding + self.topText.get_height() + self.topPadding,
+        )
+        self.guessesLeft = self.numberOfBlueSquares
         self.generateMatrix()
-        print(self.matrix)
 
     def draw(self):
         while self.drawing:
@@ -45,6 +57,39 @@ class MemoryMatrix:
                     b1, b2, b3 = pygame.mouse.get_pressed()
                     if b1 and self.backButton.isHovering():
                         self.drawing = False
+                    position = self.isHoveringOnMatrix()
+                    if b1 and position and not (self.revealing) and not (self.waiting):
+                        px, py = position
+                        row, col = py // MATRIX_SQUARE_WIDTH, px // MATRIX_SQUARE_WIDTH
+                        self.matrix[int(row)][int(col)].isSelected = True
+                        self.guessesLeft -= 1
+                        matrixItem = self.matrix[int(row)][int(col)]
+
+                        if matrixItem.value == True:
+                            self.score += 250
+
+                        if self.guessesLeft <= 0:
+                            self.waiting = True
+                            self.waiting_start_time = pygame.time.get_ticks()
+                            self.showingAfterGuesses = True
+
+            if (
+                self.revealing
+                and pygame.time.get_ticks() - self.start_time > self.revealingTime
+            ):
+                self.revealing = False
+
+            if (
+                self.waiting
+                and pygame.time.get_ticks() - self.waiting_start_time > self.waitingTime
+            ):
+                self.waiting = False
+                self.revealing = True
+                self.showingAfterGuesses = False
+                self.numberOfBlueSquares += 1
+                self.guessesLeft = self.numberOfBlueSquares
+                self.start_time = pygame.time.get_ticks()
+                self.generateMatrix()
 
             self.update()
             pygame.display.update()
@@ -56,83 +101,120 @@ class MemoryMatrix:
             (self.width / 2 - (self.topText.get_width() / 2), self.topPadding),
         )
         self.drawBorder()
+        self.showTimer()
 
         for row in range(self.numberOfRows):
             for col in range(self.numberOfCols):
                 position = self.matrix[col][row]
-                pygame.draw.rect(
-                    self.matrixSurface,
-                    COLORS["matrix_border"],
-                    (
-                        (row) * MATRIX_SQUARE_WIDTH - self.matrixItemBorderWidth,
-                        (col) * MATRIX_SQUARE_WIDTH - self.matrixItemBorderWidth,
-                        MATRIX_SQUARE_WIDTH + (self.matrixItemBorderWidth * 2),
-                        MATRIX_SQUARE_WIDTH + (self.matrixItemBorderWidth * 2),
-                    ),
+                position.draw(
+                    self.matrixSurface, self.revealing, self.showingAfterGuesses
                 )
-                if position == True:
-                    pygame.draw.rect(
-                        self.matrixSurface,
-                        COLORS["matrix_coloured_box"],
-                        (
-                            (row) * MATRIX_SQUARE_WIDTH,
-                            (col) * MATRIX_SQUARE_WIDTH,
-                            MATRIX_SQUARE_WIDTH,
-                            MATRIX_SQUARE_WIDTH,
-                        ),
-                    )
-                else:
-                    pygame.draw.rect(
-                        self.matrixSurface,
-                        COLORS["matrix_none_box"],
-                        (
-                            (row) * MATRIX_SQUARE_WIDTH,
-                            (col) * MATRIX_SQUARE_WIDTH,
-                            MATRIX_SQUARE_WIDTH,
-                            MATRIX_SQUARE_WIDTH,
-                        ),
-                    )
+
         self.surface.blit(
             self.matrixSurface,
-            (
-                self.width / 2 - (self.matrixSurface.get_width() / 2),
-                self.topPadding + self.topText.get_height() + self.topPadding,
-            ),
+            (self.matrixX, self.matrixY),
         )
+
+        self.showGuessesLeft()
+        self.showScore()
 
     def generateMatrix(self):
         newMatrix = []
         for row in range(self.numberOfRows):
             newMatrix.append([])
-            for _ in range(self.numberOfCols):
-                newMatrix[row].append(False)
+            for col in range(self.numberOfCols):
+                newMatrix[row].append(
+                    MemoryMatrixItem(
+                        col * MATRIX_SQUARE_WIDTH,
+                        row * MATRIX_SQUARE_WIDTH,
+                        MATRIX_SQUARE_WIDTH,
+                        MATRIX_SQUARE_WIDTH,
+                        False,
+                        self.matrixItemBorderWidth,
+                    )
+                )
 
         for _ in range(self.numberOfBlueSquares):
             randomRow, randomCol = random.randint(
                 0, self.numberOfRows - 1
             ), random.randint(0, self.numberOfCols - 1)
             position = newMatrix[randomRow][randomCol]
-            while position:
+            while position.value:
                 randomRow, randomCol = random.randint(
                     0, self.numberOfRows - 1
                 ), random.randint(0, self.numberOfCols - 1)
                 position = newMatrix[randomRow][randomCol]
-            newMatrix[randomRow][randomCol] = True
+
+            newMatrix[randomRow][randomCol].value = True
 
         self.matrix = newMatrix
 
     def drawBorder(self):
-        matrixPosX, matrixPosY = (
-            self.width / 2 - (self.matrixSurface.get_width() / 2),
-            self.topPadding + self.topText.get_height() + self.topPadding,
-        )
         pygame.draw.rect(
             self.surface,
             COLORS["matrix_border"],
             (
-                matrixPosX - self.borderWidth,
-                matrixPosY - self.borderWidth,
+                self.matrixX - self.borderWidth,
+                self.matrixY - self.borderWidth,
                 self.matrixSurface.get_width() + self.borderWidth * 2,
                 self.matrixSurface.get_height() + self.borderWidth * 2,
+            ),
+        )
+
+    def showTimer(self):
+        if self.revealing:
+            pygame.draw.circle(
+                self.surface,
+                COLORS["white_foreground"],
+                (WIDTH // 2 // 2 // 2, HEIGHT // 2),
+                50,
+            )
+            renderingText = FONTS["Bold"].render(
+                str(
+                    (4000 - (pygame.time.get_ticks() - self.start_time)) // 1000,
+                ),
+                1,
+                COLORS["black_background"],
+            )
+            self.surface.blit(
+                renderingText,
+                (
+                    (WIDTH // 2 // 2 // 2) - renderingText.get_width() // 2,
+                    (HEIGHT // 2) - renderingText.get_height() // 2,
+                ),
+            )
+
+    def isHoveringOnMatrix(self):
+        mouseX, mouseY = pygame.mouse.get_pos()
+        if (
+            mouseX > self.matrixX
+            and mouseX < self.matrixX + self.matrixSurface.get_width()
+            and mouseY > self.matrixY
+            and mouseY < self.matrixY + self.matrixSurface.get_width()
+        ):
+            return (mouseX - self.matrixX, mouseY - self.matrixY)
+        return False
+
+    def showGuessesLeft(self):
+        guessesLeftText = FONTS["Bold"].render(
+            f"Guesses: {self.guessesLeft}", 1, COLORS["white_foreground"]
+        )
+        self.surface.blit(
+            guessesLeftText,
+            (
+                self.width - guessesLeftText.get_width() - self.topPadding,
+                self.height - guessesLeftText.get_height() - self.topPadding,
+            ),
+        )
+
+    def showScore(self):
+        scoreText = FONTS["Bold"].render(
+            f"Score: {self.score}", 1, COLORS["white_foreground"]
+        )
+        self.surface.blit(
+            scoreText,
+            (
+                self.topPadding,
+                self.height - scoreText.get_height() - self.topPadding,
             ),
         )

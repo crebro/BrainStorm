@@ -11,6 +11,7 @@ COLORS = {
     "matrix_background": (113, 82, 72),
     "matrix_none_box": (93, 68, 61),
     "matrix_coloured_box": (77, 188, 182),
+    "matrix_coloured_failed_box": (65, 110, 107),
 }
 
 FONTS = {
@@ -38,5 +39,8 @@ IMAGES = {
     ),
     "ebbandflow": pygame.transform.scale(
         pygame.image.load("assets/images/ebbandflow.JPG"), (200, 200)
+    ),
+    "matrix_wrong": pygame.transform.scale(
+        pygame.image.load("assets/images/wrong matrix.png"), (80, 80)
     ),
 }
