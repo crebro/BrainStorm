@@ -1,3 +1,4 @@
+from brainstorm.button import Button
 from brainstorm.memoryMatrixItem import MemoryMatrixItem
 from pygame.event import post
 from brainstorm.menuButton import MenuButton
@@ -22,6 +23,9 @@ class MemoryMatrix:
         self.backButton = MenuButton(
             IMAGES["back"], "Back", IMAGES["back"].get_width() / 2 + 20, 20, padding=20
         )
+        self.reset()
+
+    def reset(self):
         self.previousTimeCounter = 4
         self.topPadding = 20
         self.numberOfRows = 6
@@ -89,6 +93,12 @@ class MemoryMatrix:
                                 self.showingAfterGuesses = True
                                 if self.allRightThisMatch:
                                     pygame.mixer.Sound.play(SOUNDS["correct"])
+                    if self.gameOver:
+                        try:
+                            if self.retryButton.isHovering():
+                                self.reset()
+                        except Exception as e:
+                            print(e)
 
             if (
                 self.revealing
@@ -103,7 +113,6 @@ class MemoryMatrix:
             ):
                 if self.wrongs >= 3:
                     self.gameOver = True
-                    print("Game over")
 
                 self.waiting = False
                 self.revealing = True
@@ -123,33 +132,51 @@ class MemoryMatrix:
             self.topText,
             (self.width / 2 - (self.topText.get_width() / 2), self.topPadding),
         )
-        self.drawBorder()
-        self.showTimer()
 
-        for row in range(self.numberOfRows):
-            for col in range(self.numberOfCols):
-                position = self.matrix[col][row]
-                position.draw(
-                    self.matrixSurface, self.revealing, self.showingAfterGuesses
-                )
+        if not (self.gameOver):
 
-        self.surface.blit(
-            self.matrixSurface,
-            (self.matrixX, self.matrixY),
-        )
+            self.drawBorder()
+            self.showTimer()
 
-        self.showGuessesLeft()
-        self.showScore()
-        self.showAllRightThisMatch()
-        time = (
-            (self.totalTime * 1000)
-            - (pygame.time.get_ticks() - self.counter_start_time)
-        ) // 1000
-        if time <= 0:
-            self.gameOver = True
-        print(time)
-        self.showAllTimeCounter(time)
-        self.showWrongs()
+            for row in range(self.numberOfRows):
+                for col in range(self.numberOfCols):
+                    position = self.matrix[col][row]
+                    position.draw(
+                        self.matrixSurface, self.revealing, self.showingAfterGuesses
+                    )
+
+            self.surface.blit(
+                self.matrixSurface,
+                (self.matrixX, self.matrixY),
+            )
+
+            self.showGuessesLeft()
+            self.showScore()
+            self.showAllRightThisMatch()
+            time = (
+                (self.totalTime * 1000) - (pygame.time.get_ticks() - self.start_time)
+            ) // 1000
+            if time <= 0:
+                self.gameOver = True
+            self.showAllTimeCounter(time)
+            self.showWrongs()
+
+        else:
+            gameOverText = FONTS["Bold"].render(
+                f"Score: { self.score }", 1, COLORS["white_foreground"]
+            )
+            gameOverTextX, gameOverTextY = (
+                self.width / 2 - (gameOverText.get_width() / 2),
+                (self.height / 2 - (gameOverText.get_height() / 2)),
+            )
+            self.retryButton = Button(
+                "Retry",
+                (WIDTH / 2, gameOverTextY + gameOverText.get_height() * 2),
+                COLORS["matrix_border"],
+                COLORS["white_foreground"],
+            )
+            self.surface.blit(gameOverText, (gameOverTextX, gameOverTextY))
+            self.retryButton.draw(self.surface)
 
     def generateMatrix(self):
         newMatrix = []
