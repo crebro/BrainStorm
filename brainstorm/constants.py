@@ -1,5 +1,6 @@
 import pygame
 
+pygame.mixer.init()
 pygame.font.init()
 
 WIDTH, HEIGHT = 1280, 720
@@ -43,4 +44,9 @@ IMAGES = {
     "matrix_wrong": pygame.transform.scale(
         pygame.image.load("assets/images/wrong matrix.png"), (80, 80)
     ),
+    "matrix_all_right": pygame.transform.scale(
+        pygame.image.load("assets/images/tick.png"), (100, 100)
+    ),
 }
+
+SOUNDS = {"tick": pygame.mixer.Sound("assets/sounds/timersound.wav")}

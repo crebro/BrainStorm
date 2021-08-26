@@ -1,8 +1,10 @@
 from brainstorm.memoryMatrixItem import MemoryMatrixItem
 from pygame.event import post
 from brainstorm.menuButton import MenuButton
-from brainstorm.constants import COLORS, FONTS, HEIGHT, IMAGES, WIDTH
+from brainstorm.constants import COLORS, FONTS, HEIGHT, IMAGES, SOUNDS, WIDTH
 import pygame
+
+pygame.mixer.init()
 import sys
 import random
 
@@ -32,6 +34,7 @@ class MemoryMatrix:
         self.waitingTime = 2000
         self.waiting = False
         self.score = 0
+        self.allRightThisMatch = True
         self.showingAfterGuesses = False
         self.matrixSurface = pygame.Surface(
             (
@@ -61,17 +64,20 @@ class MemoryMatrix:
                     if b1 and position and not (self.revealing) and not (self.waiting):
                         px, py = position
                         row, col = py // MATRIX_SQUARE_WIDTH, px // MATRIX_SQUARE_WIDTH
-                        self.matrix[int(row)][int(col)].isSelected = True
-                        self.guessesLeft -= 1
                         matrixItem = self.matrix[int(row)][int(col)]
+                        if not (matrixItem.isSelected):
+                            self.matrix[int(row)][int(col)].isSelected = True
+                            self.guessesLeft -= 1
 
-                        if matrixItem.value == True:
-                            self.score += 250
+                            if matrixItem.value == True:
+                                self.score += 250
+                            else:
+                                self.allRightThisMatch = False
 
-                        if self.guessesLeft <= 0:
-                            self.waiting = True
-                            self.waiting_start_time = pygame.time.get_ticks()
-                            self.showingAfterGuesses = True
+                            if self.guessesLeft <= 0:
+                                self.waiting = True
+                                self.waiting_start_time = pygame.time.get_ticks()
+                                self.showingAfterGuesses = True
 
             if (
                 self.revealing
@@ -86,6 +92,7 @@ class MemoryMatrix:
                 self.waiting = False
                 self.revealing = True
                 self.showingAfterGuesses = False
+                self.allRightThisMatch = True
                 self.numberOfBlueSquares += 1
                 self.guessesLeft = self.numberOfBlueSquares
                 self.start_time = pygame.time.get_ticks()
@@ -117,6 +124,7 @@ class MemoryMatrix:
 
         self.showGuessesLeft()
         self.showScore()
+        self.showAllRightThisMatch()
 
     def generateMatrix(self):
         newMatrix = []
@@ -181,6 +189,20 @@ class MemoryMatrix:
                 (
                     (WIDTH // 2 // 2 // 2) - renderingText.get_width() // 2,
                     (HEIGHT // 2) - renderingText.get_height() // 2,
+                ),
+            )
+
+    def showAllRightThisMatch(self):
+        if self.allRightThisMatch and self.waiting:
+            tickImage = IMAGES["matrix_all_right"]
+            self.surface.blit(
+                tickImage,
+                (
+                    (WIDTH // 2)
+                    + (WIDTH // 2 // 2)
+                    + (WIDTH // 2 // 2 // 2)
+                    - tickImage.get_width() // 2,
+                    (HEIGHT // 2) - tickImage.get_height() // 2,
                 ),
             )
 
