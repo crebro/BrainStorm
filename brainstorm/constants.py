@@ -49,4 +49,9 @@ IMAGES = {
     ),
 }
 
-SOUNDS = {"tick": pygame.mixer.Sound("assets/sounds/timersound.wav")}
+SOUNDS = {
+    "tick": pygame.mixer.Sound("assets/sounds/timersound.wav"),
+    "correct": pygame.mixer.Sound("assets/sounds/correct.wav"),
+    "wrong": pygame.mixer.Sound("assets/sounds/wrong.mp3"),
+    "flip": pygame.mixer.Sound("assets/sounds/flip.wav"),
+}

@@ -22,6 +22,7 @@ class MemoryMatrix:
         self.backButton = MenuButton(
             IMAGES["back"], "Back", IMAGES["back"].get_width() / 2 + 20, 20, padding=20
         )
+        self.previousTimeCounter = 4
         self.topPadding = 20
         self.numberOfRows = 6
         self.numberOfCols = 6
@@ -71,13 +72,17 @@ class MemoryMatrix:
 
                             if matrixItem.value == True:
                                 self.score += 250
+                                pygame.mixer.Sound.play(SOUNDS["flip"])
                             else:
                                 self.allRightThisMatch = False
+                                pygame.mixer.Sound.play(SOUNDS["wrong"])
 
                             if self.guessesLeft <= 0:
                                 self.waiting = True
                                 self.waiting_start_time = pygame.time.get_ticks()
                                 self.showingAfterGuesses = True
+                                if self.allRightThisMatch:
+                                    pygame.mixer.Sound.play(SOUNDS["correct"])
 
             if (
                 self.revealing
@@ -177,9 +182,10 @@ class MemoryMatrix:
                 (WIDTH // 2 // 2 // 2, HEIGHT // 2),
                 50,
             )
+            time = (4000 - (pygame.time.get_ticks() - self.start_time)) // 1000
             renderingText = FONTS["Bold"].render(
                 str(
-                    (4000 - (pygame.time.get_ticks() - self.start_time)) // 1000,
+                    time,
                 ),
                 1,
                 COLORS["black_background"],
@@ -191,6 +197,10 @@ class MemoryMatrix:
                     (HEIGHT // 2) - renderingText.get_height() // 2,
                 ),
             )
+
+            if time != self.previousTimeCounter:
+                pygame.mixer.Sound.play(SOUNDS["tick"])
+                self.previousTimeCounter = time
 
     def showAllRightThisMatch(self):
         if self.allRightThisMatch and self.waiting:
