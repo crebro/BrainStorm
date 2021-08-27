@@ -16,6 +16,7 @@ COLORS = {
     "matrix_coloured_box": (77, 188, 182),
     "matrix_coloured_failed_box": (65, 110, 107),
     "koi_pond_color": (0, 167, 144),
+    "good_green": (98, 222, 53),
 }
 
 FONTS = {
@@ -52,6 +53,15 @@ IMAGES = {
     ),
     "matrix_all_right": pygame.transform.scale(
         pygame.image.load("assets/images/tick.png"), (100, 100)
+    ),
+    "tick": pygame.transform.scale(
+        pygame.image.load("assets/images/tick.png"), (100, 100)
+    ),
+    "wrong": pygame.transform.scale(
+        pygame.image.load("assets/images/wrong.png"), (100, 100)
+    ),
+    "minus": pygame.transform.scale(
+        pygame.image.load("assets/images/minus.png"), (100, 100)
     ),
 }
 
