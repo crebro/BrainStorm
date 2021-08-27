@@ -1,7 +1,9 @@
 import pygame
 import random
 import math
-from brainstorm.constants import COLORS, IMAGES, KOISIZE, KOI_ANIMATION
+from brainstorm.constants import IMAGES, KOISIZE, KOI_ANIMATION
+
+random.seed("asdfasdf")
 
 
 class KoiFish:
@@ -23,15 +25,28 @@ class KoiFish:
         self.showBeingFedDuration = 1500
         self.showFullSizedImageDuration = 200
         self.showBeingFedStartTime = 0
+        self.doMoveEverything = False
+        self.moveEverythingSpeed = 10
+        self.moveSpeed = 1
+        self.doRevealFishStatus = False
 
-    def draw(self, surface, moveSpeed, stayInCenter=False):
-        if self.showBeingFed:
+    def draw(self, surface):
+        if self.showBeingFed or self.doRevealFishStatus:
             self.drawBeingFed(surface)
         surface.blit(self.drawingImage, (self.x, self.y))
-        self.manageFishMoving(moveSpeed, stayInCenter)
-        self.manageFishRotation(surface)
 
         self.manageAnimation()
+        self.manageFishMoving()
+        self.manageFishRotation(surface)
+
+        if self.doMoveEverything:
+            self.x -= self.moveEverythingSpeed
+            self.targetX -= self.moveEverythingSpeed
+
+    def moveEverything(
+        self,
+    ):
+        self.doMoveEverything = True
 
     def getDistance(self, x1, y1, x2, y2):
         return math.sqrt(((x2 - x1) ** 2) + ((y2 - y1) ** 2))
@@ -74,14 +89,14 @@ class KoiFish:
         elif pointQuad == 3:
             self.drawingImage = pygame.transform.rotate(self.image, (rotation) + 90)
 
-    def manageFishMoving(self, moveSpeed, stayInTarget):
-        directionx = (1 if (self.targetX - self.x) > 0 else -1) * moveSpeed
-        directiony = (1 if (self.targetY - self.y) > 0 else -1) * moveSpeed
+    def manageFishMoving(self):
+        directionx = (1 if (self.targetX - self.x) > 0 else -1) * self.moveSpeed
+        directiony = (1 if (self.targetY - self.y) > 0 else -1) * self.moveSpeed
         self.x += directionx
         self.y += directiony
 
         pointDistance = self.getDistance(self.x, self.y, self.targetX, self.targetY)
-        if pointDistance < 25 and not (stayInTarget):
+        if pointDistance < 25:
             self.targetX, self.targetY = random.randint(
                 0, self.gameAreaWidth
             ), random.randint(0, self.gameAreaHeight)
@@ -119,11 +134,26 @@ class KoiFish:
             self.showBeingFedDuration - self.showFullSizedImageDuration
         )
 
-    def drawBeingFed(self, surface):
+    def revealFishStatus(self):
+        self.doRevealFishStatus = True
+        self.showBeingFedStartTime = pygame.time.get_ticks()
+        self.shrinkingTimeStart = pygame.time.get_ticks() + (
+            self.showBeingFedDuration - self.showFullSizedImageDuration
+        )
+        self.showBeingFedDuration = self.showBeingFedDuration * 2
+
+    def drawBeingFed(
+        self,
+        surface,
+    ):
         tickTime = pygame.time.get_ticks() - self.showBeingFedStartTime
         imageSize = 50
         if (tickTime) >= self.showBeingFedDuration:
+            if self.doRevealFishStatus:
+                self.doRevealFishStatus = False
+                self.showBeingFedDuration = 1500
             self.showBeingFed = False
+
         if (tickTime) <= self.showFullSizedImageDuration:
             imageSize = int((tickTime / self.showFullSizedImageDuration) * 50)
         if (tickTime) >= self.showBeingFedDuration - self.showFullSizedImageDuration:
@@ -135,11 +165,21 @@ class KoiFish:
                 )
                 * 50
             )
+            if imageSize < 0:
+                imageSize = 0
 
-        iconImage = pygame.transform.scale(
-            IMAGES["wrong"] if self.showAlreadyFed else IMAGES["tick"],
-            (imageSize, imageSize),
-        )
+        iconImage = None
+        if self.doRevealFishStatus and not (self.isFed):
+            iconImage = pygame.transform.scale(
+                IMAGES["minus"],
+                (imageSize, imageSize),
+            )
+        else:
+            iconImage = pygame.transform.scale(
+                IMAGES["wrong"] if self.showAlreadyFed else IMAGES["tick"],
+                (imageSize, imageSize),
+            )
+
         surface.blit(
             iconImage,
             (

@@ -27,18 +27,21 @@ class KoiGame:
         self.waitingTime = 1000
         self.canFeedFish = False
         self.fishesFed = 0
-        self.fishSpeed = 1
         self.loadingStart = pygame.time.get_ticks()
         self.loadingNextRound = True
         self.loadingTime = 3000
-        # self.generateFishes()
+        self.waitingForNextLoad = False
+        self.waitingNextLevelTime = 3000
 
     def generateFishes(self):
         self.fishes = []
         for _ in range(self.numberOfFishes):
             self.fishes.append(
                 KoiFish(
-                    (self.width - KOISIZE[0], self.height - KOISIZE[1] - self.hudHeight)
+                    (
+                        self.width - KOISIZE[0],
+                        self.height - KOISIZE[1] - self.hudHeight,
+                    )
                 )
             )
 
@@ -77,24 +80,33 @@ class KoiGame:
         )
 
         for fish in self.fishes:
-            fish.draw(self.surface, self.fishSpeed, stayInCenter=self.loadingNextRound)
+            fish.draw(self.surface)
 
         if (
             self.loadingNextRound
             and pygame.time.get_ticks() - self.loadingStart > self.loadingTime
         ):
             self.loadingNextRound = False
-            self.fishSpeed = 1
             self.generateFishes()
 
-        if self.fishesFed == self.numberOfFishes:
+        if (self.fishesFed == self.numberOfFishes) and not (self.waitingForNextLoad):
+            self.waitingForNextLoad = True
+            self.waitingForNextLoadStartTime = pygame.time.get_ticks()
+            for fish in self.fishes:
+                fish.revealFishStatus()
+
+        if (
+            self.waitingForNextLoad
+            and pygame.time.get_ticks() - self.waitingForNextLoadStartTime
+            > self.waitingNextLevelTime
+        ):
+            self.waitingForNextLoad = False
             self.loadingNextRound = True
             self.numberOfFishes += 1
             self.fishesFed = 0
             self.loadingStart = pygame.time.get_ticks()
-            self.fishSpeed = 3
             for fish in self.fishes:
-                fish.targetX, fish.targetY = self.width / 2, self.height / 2
+                fish.moveEverything()
 
         self.drawBar()
         self.drawTimer()
@@ -133,7 +145,7 @@ class KoiGame:
                 self.surface,
                 COLORS["white_foreground"],
                 (self.width / 2, self.height / 2),
-                100,
+                50,
             )
             self.surface.blit(
                 renderingText,
