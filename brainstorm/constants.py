@@ -1,9 +1,11 @@
 import pygame
+import os
 
 pygame.mixer.init()
 pygame.font.init()
 
 WIDTH, HEIGHT = 1280, 720
+KOISIZE = (100, 100)
 COLORS = {
     "black_background": (30, 30, 30),
     "hovering_color": (50, 50, 50),
@@ -13,6 +15,7 @@ COLORS = {
     "matrix_none_box": (93, 68, 61),
     "matrix_coloured_box": (77, 188, 182),
     "matrix_coloured_failed_box": (65, 110, 107),
+    "koi_pond_color": (0, 167, 144),
 }
 
 FONTS = {
@@ -36,10 +39,13 @@ IMAGES = {
         pygame.image.load("assets/images/backbutton.png"), (50, 50)
     ),
     "memorymatrix": pygame.transform.scale(
-        pygame.image.load("assets/images/memorymatrix.JPG"), (200, 200)
+        pygame.image.load("assets/images/games/memorymatrix.JPG"), (200, 200)
     ),
     "ebbandflow": pygame.transform.scale(
-        pygame.image.load("assets/images/ebbandflow.JPG"), (200, 200)
+        pygame.image.load("assets/images/games/ebbandflow.JPG"), (200, 200)
+    ),
+    "koi": pygame.transform.scale(
+        pygame.image.load("assets/images/games/koi.jpg"), (200, 200)
     ),
     "matrix_wrong": pygame.transform.scale(
         pygame.image.load("assets/images/wrong matrix.png"), (80, 80)
@@ -55,3 +61,7 @@ SOUNDS = {
     "wrong": pygame.mixer.Sound("assets/sounds/wrong.mp3"),
     "flip": pygame.mixer.Sound("assets/sounds/flip.wav"),
 }
+KOI_ANIMATION = [
+    pygame.transform.scale(pygame.image.load(f"assets/images/Kois/{image}"), KOISIZE)
+    for image in os.listdir("assets/images/Kois")
+]

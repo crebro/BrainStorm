@@ -1,6 +1,5 @@
 from brainstorm.button import Button
 from brainstorm.memoryMatrixItem import MemoryMatrixItem
-from pygame.event import post
 from brainstorm.menuButton import MenuButton
 from brainstorm.constants import COLORS, FONTS, HEIGHT, IMAGES, SOUNDS, WIDTH
 import pygame

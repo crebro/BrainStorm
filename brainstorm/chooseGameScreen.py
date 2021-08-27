@@ -1,3 +1,4 @@
+from brainstorm.koiGame import KoiGame
 from brainstorm.memoryMatrix import MemoryMatrix
 from brainstorm.menuButton import MenuButton
 from pygame.event import Event
@@ -27,9 +28,9 @@ class ChooseGameScreen:
             WIDTH // 2,
             self.optionsDrwaingY,
         )
-        self.ebbAndFlowOption = MenuButton(
-            IMAGES["ebbandflow"],
-            "Ebb and Flow",
+        self.koiOption = MenuButton(
+            IMAGES["koi"],
+            "Feeding Koi",
             WIDTH // 2 - self.memoryMatrixOption.width,
             self.optionsDrwaingY,
         )
@@ -47,6 +48,9 @@ class ChooseGameScreen:
                     if b1 and self.memoryMatrixOption.isHovering():
                         memoryMatrix = MemoryMatrix(self.surface)
                         memoryMatrix.draw()
+                    if b1 and self.koiOption.isHovering():
+                        koiGame = KoiGame(self.surface)
+                        koiGame.draw()
 
             self.update()
             pygame.display.update()
@@ -60,4 +64,4 @@ class ChooseGameScreen:
         )
         self.backButton.draw(self.surface)
         self.memoryMatrixOption.draw(self.surface)
-        self.ebbAndFlowOption.draw(self.surface)
+        self.koiOption.draw(self.surface)
