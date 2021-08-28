@@ -17,6 +17,7 @@ COLORS = {
     "matrix_coloured_failed_box": (65, 110, 107),
     "koi_pond_color": (0, 167, 144),
     "good_green": (98, 222, 53),
+    "odd_blue": (77, 79, 136),
 }
 
 FONTS = {
