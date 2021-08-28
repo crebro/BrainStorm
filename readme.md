@@ -19,7 +19,7 @@ python main.py
 
 Priority Level 3 being "This has to be in the Application" and 1 being "This can be ignored if I am low on time"
 
-- [x] Brain Games Application [Priority: 3] Not Fully Completed, One game created
+- [x] Brain Games Application [Priority: 3] Not Fully Completed, Two games created
 - [x] News Features [Priority: 2.5]
 - [ ] Daily Exercises [Priority: 2]
 - [ ] Schedule Making [Priority: 1.5]
