@@ -3,7 +3,7 @@ from brainstorm.koiFish import KoiFish
 from brainstorm.menuButton import MenuButton
 import pygame
 import sys
-from brainstorm.constants import COLORS, FONTS, HEIGHT, IMAGES, KOISIZE, WIDTH
+from brainstorm.constants import COLORS, FONTS, HEIGHT, IMAGES, KOISIZE, SOUNDS, WIDTH
 
 
 class KoiGame:
@@ -31,6 +31,7 @@ class KoiGame:
         self.reset()
 
     def reset(self):
+        self.previousTimeCounter = 4
         self.numberOfFishes = 5
         self.fishes = []
         self.counterStartTime = pygame.time.get_ticks()
@@ -77,8 +78,10 @@ class KoiGame:
                                 if fish.isFed and self.allRightThisMatch:
                                     self.numberOfWrongs += 1
                                     self.allRightThisMatch = False
+                                    pygame.mixer.Sound.play(SOUNDS["wrong"])
                                 elif not (fish.isFed):
                                     self.score += self.scoreOnCorrectFish
+                                    pygame.mixer.Sound.play(SOUNDS["correct"])
 
                                 fish.tryToFeedFish()
                                 self.counterStartTime = pygame.time.get_ticks()
@@ -206,6 +209,10 @@ class KoiGame:
                     (HEIGHT // 2) - renderingText.get_height() // 2,
                 ),
             )
+
+            if time != self.previousTimeCounter:
+                pygame.mixer.Sound.play(SOUNDS["tick"])
+                self.previousTimeCounter = time
 
     def drawAllTimeTimer(
         self,
