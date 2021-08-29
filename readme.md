@@ -15,11 +15,35 @@ python main.py
 
 ---
 
+## ScreenShots
+
+### Home Screen
+
+![Home Screen](./assets/images/github/brainstormpreview.JPG)
+
+### Choose Game Screen
+
+![Choose Game](./assets/images/github/choosegame.JPG)
+
+### Feeding Koi Game
+
+![Feeding Koi](./assets/images/github/feedingkoigame.JPG)
+
+### Memory Matirx Gmae
+
+![Memory Matrix](./assets/images/github/memorymatrixgame.JPG)
+
+### Color Match Game
+
+![Color Match](./assets/images/github/colormatchgame.JPG)
+
+---
+
 ## Checklist of Tasks on the Application
 
 Priority Level 3 being "This has to be in the Application" and 1 being "This can be ignored if I am low on time"
 
-- [x] Brain Games Application [Priority: 3] Not Fully Completed, Two games created
+- [x] Brain Games Application [Priority: 3] Not Fully Completed, Three games created
 - [x] News Features [Priority: 2.5]
 - [ ] Daily Exercises [Priority: 2]
 - [ ] Schedule Making [Priority: 1.5]
