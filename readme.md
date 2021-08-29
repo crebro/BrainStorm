@@ -2,6 +2,8 @@
 
 Brainstorm is application that allows you to keep track of your mental score and also allows to create scheldule your daily life with daily exercises as well, or at least that is the plan for now
 
+Thnking of the Theme Health, immediately, whatever comes to mind would most probably be about the physical health, so giving it a bit of thought, I decided to go more towards the mental health, trying to be a little unique, hehe I am talking like a NERD Right Now
+
 ---
 
 ## How to Run
