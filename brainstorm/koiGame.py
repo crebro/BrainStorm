@@ -32,7 +32,7 @@ class KoiGame:
 
     def reset(self):
         self.previousTimeCounter = 4
-        self.numberOfFishes = 5
+        self.numberOfFishes = 10
         self.fishes = []
         self.counterStartTime = pygame.time.get_ticks()
         self.canFeedFish = False

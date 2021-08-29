@@ -1,3 +1,4 @@
+from brainstorm.colorMatch import ColorMatch
 from brainstorm.koiGame import KoiGame
 from brainstorm.memoryMatrix import MemoryMatrix
 from brainstorm.menuButton import MenuButton
@@ -34,6 +35,12 @@ class ChooseGameScreen:
             WIDTH // 2 - self.memoryMatrixOption.width,
             self.optionsDrwaingY,
         )
+        self.colorMatchOption = MenuButton(
+            IMAGES["colormatch"],
+            "Color Match",
+            WIDTH // 2 + self.memoryMatrixOption.width,
+            self.optionsDrwaingY,
+        )
 
     def draw(self):
         while self.drawing:
@@ -51,6 +58,9 @@ class ChooseGameScreen:
                     if b1 and self.koiOption.isHovering():
                         koiGame = KoiGame(self.surface)
                         koiGame.draw()
+                    if b1 and self.colorMatchOption.isHovering():
+                        colorMatchgame = ColorMatch(self.surface)
+                        colorMatchgame.draw()
 
             self.update()
             pygame.display.update()
@@ -65,3 +75,4 @@ class ChooseGameScreen:
         self.backButton.draw(self.surface)
         self.memoryMatrixOption.draw(self.surface)
         self.koiOption.draw(self.surface)
+        self.colorMatchOption.draw(self.surface)

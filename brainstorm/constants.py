@@ -18,6 +18,13 @@ COLORS = {
     "koi_pond_color": (0, 167, 144),
     "good_green": (98, 222, 53),
     "odd_blue": (77, 79, 136),
+    "color_match_background": (123, 97, 78),
+    "colorMatch": {
+        "blue": (0, 0, 255),
+        "red": (255, 0, 0),
+        "green": (0, 255, 0),
+        "black": (0, 0, 0),
+    },
 }
 
 FONTS = {
@@ -48,6 +55,9 @@ IMAGES = {
     ),
     "koi": pygame.transform.scale(
         pygame.image.load("assets/images/games/koi.jpg"), (200, 200)
+    ),
+    "colormatch": pygame.transform.scale(
+        pygame.image.load("assets/images/games/colormatch.JPG"), (200, 200)
     ),
     "matrix_wrong": pygame.transform.scale(
         pygame.image.load("assets/images/wrong matrix.png"), (80, 80)
