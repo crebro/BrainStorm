@@ -1,9 +1,10 @@
+from brainstorm.howToPlay import HowToPlay
 from brainstorm.colorMatch import ColorMatch
 from brainstorm.koiGame import KoiGame
 from brainstorm.memoryMatrix import MemoryMatrix
 from brainstorm.menuButton import MenuButton
 from pygame.event import Event
-from brainstorm.constants import COLORS, FONTS, IMAGES, WIDTH
+from brainstorm.constants import COLORS, FONTS, HEIGHT, IMAGES, WIDTH
 import pygame
 import sys
 
@@ -22,6 +23,13 @@ class ChooseGameScreen:
         )
         self.backButton = MenuButton(
             IMAGES["back"], "Back", IMAGES["back"].get_width() / 2 + 20, 20, padding=20
+        )
+        self.howToPlayButton = MenuButton(
+            IMAGES["question"],
+            "How To Play",
+            WIDTH - IMAGES["question"].get_width() / 2 - 50,
+            20,
+            padding=20,
         )
         self.memoryMatrixOption = MenuButton(
             IMAGES["memorymatrix"],
@@ -61,6 +69,9 @@ class ChooseGameScreen:
                     if b1 and self.colorMatchOption.isHovering():
                         colorMatchgame = ColorMatch(self.surface)
                         colorMatchgame.draw()
+                    if b1 and self.howToPlayButton.isHovering():
+                        howToPlaypage = HowToPlay(self.surface)
+                        howToPlaypage.draw()
 
             self.update()
             pygame.display.update()
@@ -76,3 +87,4 @@ class ChooseGameScreen:
         self.memoryMatrixOption.draw(self.surface)
         self.koiOption.draw(self.surface)
         self.colorMatchOption.draw(self.surface)
+        self.howToPlayButton.draw(self.surface)

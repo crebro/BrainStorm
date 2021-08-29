@@ -74,6 +74,9 @@ IMAGES = {
     "minus": pygame.transform.scale(
         pygame.image.load("assets/images/minus.png"), (100, 100)
     ),
+    "question": pygame.transform.scale(
+        pygame.image.load("assets/images/question.png"), (50, 50)
+    ),
 }
 
 SOUNDS = {
@@ -86,3 +89,29 @@ KOI_ANIMATION = [
     pygame.transform.scale(pygame.image.load(f"assets/images/Kois/{image}"), KOISIZE)
     for image in os.listdir("assets/images/Kois")
 ]
+
+DOCUMENTATION = """
+    How to Play Tutorial
+    
+    ------------- Playing Koi ------------- Skill: Divied Attention
+    You are given the task of feeding all the poor koi fishes,
+    but you only have a limited number of koi food, every level, 
+    that is the number of kois in the pond,
+    your task is to feed each fish only once,
+    with every level you pass the number of koi fishes increase
+    
+    ------------- Memory Matrix ------------- Skill: Working Memory
+    This game is to increase your skill to memorize things,
+    There are blue squares shown to you on each level,
+    and you have to memorize their location,
+    you have to get all of them without getting a single one wrong,
+    Three wrongs in Three rounds, then you're out
+
+    ------------- Color Match ------------- Responsive Inhibition
+    This is a game to test your responsiveness, 
+    you have to be quick and play against the time,
+    if the name of the color matches on the left matches with the 
+    actual color on the right press right to indicite that they match
+    if not press the left arrow key to indicate that they don't match 
+
+"""
