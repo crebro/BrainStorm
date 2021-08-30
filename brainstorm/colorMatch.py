@@ -27,6 +27,18 @@ class ColorMatch:
         ]
         self.textPadding = 20
         self.totalTime = 60
+        self.leftArrowButton = MenuButton(
+            IMAGES["leftarrow"],
+            "Don't Match",
+            WIDTH // 2 - (IMAGES["leftarrow"].get_width()) - self.topPadding,
+            HEIGHT - (IMAGES["leftarrow"].get_height() // 2 + 100),
+        )
+        self.rightArrowButton = MenuButton(
+            IMAGES["rightarrow"],
+            "Do Match",
+            WIDTH // 2 + (IMAGES["leftarrow"].get_width()) + self.topPadding,
+            HEIGHT - (IMAGES["leftarrow"].get_height() // 2 + 100),
+        )
 
         self.reset()
 
@@ -58,8 +70,12 @@ class ColorMatch:
                                 self.reset()
                         except Exception as e:
                             print(e)
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RIGHT:
+                if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+                    b1, b2, b3 = pygame.mouse.get_pressed()
+                    keys = pygame.key.get_pressed()
+                    if (b1 and self.rightArrowButton.isHovering()) or keys[
+                        pygame.K_RIGHT
+                    ]:
                         if self.meaningText == self.valueColor["value"]:
                             self.score += 250
                             pygame.mixer.Sound.play(SOUNDS["correct"])
@@ -69,7 +85,9 @@ class ColorMatch:
                             pygame.mixer.Sound.play(SOUNDS["wrong"])
                         self.reInitColors()
 
-                    if event.key == pygame.K_LEFT:
+                    if (b1 and self.leftArrowButton.isHovering()) or keys[
+                        pygame.K_LEFT
+                    ]:
                         if self.meaningText != self.valueColor["value"]:
                             pygame.mixer.Sound.play(SOUNDS["correct"])
                             self.score += 250
@@ -83,6 +101,8 @@ class ColorMatch:
 
     def update(self):
         self.backButton.draw(self.surface)
+        self.rightArrowButton.draw(self.surface)
+        self.leftArrowButton.draw(self.surface)
         self.surface.blit(
             self.topText,
             (self.width / 2 - (self.topText.get_width() / 2), self.topPadding),
@@ -170,8 +190,12 @@ class ColorMatch:
             ),
         )
 
-        meaningHint = FONTS["Regular"].render("Meaning", 1, COLORS["white_foreground"])
-        valueHint = FONTS["Regular"].render("Value", 1, COLORS["white_foreground"])
+        meaningHint = FONTS["Regular"].render(
+            "Color Word", 1, COLORS["white_foreground"]
+        )
+        valueHint = FONTS["Regular"].render(
+            "Color Value", 1, COLORS["white_foreground"]
+        )
 
         self.surface.blit(
             meaningHint,
@@ -201,7 +225,7 @@ class ColorMatch:
         self.surface.blit(
             timeText,
             (
-                self.width / 2 - (timeText.get_width() / 2),
+                self.topPadding,
                 self.height - timeText.get_height() - self.topPadding,
             ),
         )

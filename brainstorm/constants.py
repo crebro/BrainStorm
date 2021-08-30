@@ -77,6 +77,12 @@ IMAGES = {
     "question": pygame.transform.scale(
         pygame.image.load("assets/images/question.png"), (50, 50)
     ),
+    "rightarrow": pygame.transform.scale(
+        pygame.image.load("assets/images/rightarrow.png"), (50, 50)
+    ),
+    "leftarrow": pygame.transform.scale(
+        pygame.image.load("assets/images/leftarrow.png"), (50, 50)
+    ),
 }
 
 SOUNDS = {
