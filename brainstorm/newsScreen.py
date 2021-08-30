@@ -2,6 +2,7 @@ from brainstorm.menuButton import MenuButton
 from brainstorm.newsItem import NewsItem
 from brainstorm.constants import COLORS, FONTS, IMAGES, WIDTH
 from brainstorm.api import getJsonRequest
+import webbrowser
 import pygame
 import sys
 import threading
@@ -58,6 +59,11 @@ class NewsScreen:
                     m1, m2, m3 = pygame.mouse.get_pressed()
                     if m1 and self.backButton.isHovering():
                         self.drawing = False
+                    if m1:
+                        for newsItem in self.newsItems:
+                            if newsItem.isHovering(self.surfaceYPos):
+                                webbrowser.open(newsItem.redirectLocation)
+                                break
 
             self.update()
             pygame.display.update()
@@ -121,6 +127,7 @@ class NewsScreen:
                 textY,
                 news_item["title"],
                 currentRowIteration,
+                news_item["url"],
             )
             self.newsItems.append(news)
 

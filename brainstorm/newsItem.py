@@ -17,6 +17,7 @@ class NewsItem:
         textY,
         text,
         rowIteration,
+        redirectLocation,
     ) -> None:
         self.x = x
         self.y = y
@@ -26,6 +27,7 @@ class NewsItem:
         self.image = image
         self.textX, self.textY = textX, textY
         self.text = text
+        self.redirectLocation = redirectLocation
         self.rowIteration = rowIteration
 
     def draw(self, surface, newsSurfacePosition):
